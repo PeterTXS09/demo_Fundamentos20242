@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Regalos</title>
+</head>
+<body>
+    <h1>Lista de Regalos</h1>
+    
+    <h2>Añadir un Regalo</h2>
+    <form action="/add_gift" method="POST">
+        <label for="gift_name">Nombre del Regalo:</label>
+        <input type="text" id="gift_name" name="gift_name" required><br><br>
+        
+        <label for="recipient">Destinatario:</label>
+        <input type="text" id="recipient" name="recipient" required><br><br>
+        
+        <button type="submit">Añadir Regalo</button>
+    </form>
+
+    <h2>Eliminar un Regalo</h2>
+    <form action="/delete_gift" method="POST">
+        <label for="gift_name_to_delete">Nombre del Regalo a Eliminar:</label>
+        <input type="text" id="gift_name_to_delete" name="gift_name_to_delete" required><br><br>
+        
+        <button type="submit">Eliminar Regalo</button>
+    </form>
+
+    <h2>Regalos:</h2>
+    <ul>
+        {% for gift in regalos %}
+            <li>{{ gift['gift_name'] }} - Destinatario: {{ gift['recipient'] }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Obtener Todos los Nombres de Regalos (Método GET)</h2>
+    <button onclick="getGiftNames()">Obtener Nombres de Regalos</button>
+    <ul id="gift_names"></ul>
+
+    <script>
+        function getGiftNames() {
+            fetch('/get_gifts')
+                .then(response => response.json())
+                .then(data => {
+                    const giftNamesList = document.getElementById('gift_names');
+                    giftNamesList.innerHTML = '';
+                    data.forEach(gift => {
+                        const li = document.createElement('li');
+                        li.textContent = gift;
+                        giftNamesList.appendChild(li);
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
